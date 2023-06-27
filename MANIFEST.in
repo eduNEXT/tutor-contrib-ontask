@@ -1,0 +1,2 @@
+recursive-include tutorontask/patches *
+recursive-include tutorontask/templates *
