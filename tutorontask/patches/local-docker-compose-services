@@ -1,0 +1,22 @@
+{% if RUN_LIMESURVEY %}
+limesurvey:
+  image: {{ LIMESURVEY_DOCKER_IMAGE }}
+  ports:
+    - 8082:{{ LIMESURVEY_PORT }}
+  environment:
+    LIMESURVEY_DB_HOST: {{ MYSQL_HOST }}
+    LIMESURVEY_DB_PASSWORD: {{ LIMESURVEY_DB_PASSWORD }}
+    LIMESURVEY_DB_USER: {{ LIMESURVEY_DB_USER }}
+    LIMESURVEY_DB_NAME: {{ LIMESURVEY_DB_NAME }}
+    LIMESURVEY_ADMIN_USER: {{ LIMESURVEY_ADMIN_USER }}
+    LIMESURVEY_ADMIN_PASSWORD: {{ LIMESURVEY_ADMIN_PASSWORD }}
+    LIMESURVEY_ADMIN_NAME: {{ LIMESURVEY_ADMIN_NAME }}
+    LIMESURVEY_ADMIN_EMAIL: {{ LIMESURVEY_ADMIN_EMAIL }}
+  volumes:
+    - ../../data/limesurvey/plugins:/var/www/html/plugins
+    - ../../data/limesurvey/upload:/var/www/html/upload
+    - ../../data/limesurvey/config:/var/www/html/application/config
+  restart: unless-stopped
+  depends_on:
+    - mysql
+{% endif %}
