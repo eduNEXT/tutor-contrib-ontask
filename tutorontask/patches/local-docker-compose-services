@@ -10,7 +10,6 @@ ontask:
     - DATABASE_URL={{ ONTASK_DATABASE_URL }}
     - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_PASSWORD }}
     - REDIS_URL={{ ONTASK_REDIS_URL }}
-    - DEBUG=True
     - SECRET_KEY={{ ONTASK_SECRET_KEY }}
     - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
     - DJANGO_SETTINGS_MODULE=settings.production
@@ -21,6 +20,7 @@ ontask:
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/settings/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
   depends_on:
     - postgres
     - redis
