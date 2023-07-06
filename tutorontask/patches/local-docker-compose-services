@@ -1,22 +1,63 @@
-{% if RUN_LIMESURVEY %}
-limesurvey:
-  image: {{ LIMESURVEY_DOCKER_IMAGE }}
+ontask:
+  image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - 8082:{{ LIMESURVEY_PORT }}
+    - "8080:8080"
   environment:
-    LIMESURVEY_DB_HOST: {{ MYSQL_HOST }}
-    LIMESURVEY_DB_PASSWORD: {{ LIMESURVEY_DB_PASSWORD }}
-    LIMESURVEY_DB_USER: {{ LIMESURVEY_DB_USER }}
-    LIMESURVEY_DB_NAME: {{ LIMESURVEY_DB_NAME }}
-    LIMESURVEY_ADMIN_USER: {{ LIMESURVEY_ADMIN_USER }}
-    LIMESURVEY_ADMIN_PASSWORD: {{ LIMESURVEY_ADMIN_PASSWORD }}
-    LIMESURVEY_ADMIN_NAME: {{ LIMESURVEY_ADMIN_NAME }}
-    LIMESURVEY_ADMIN_EMAIL: {{ LIMESURVEY_ADMIN_EMAIL }}
-  volumes:
-    - ../../data/limesurvey/plugins:/var/www/html/plugins
-    - ../../data/limesurvey/upload:/var/www/html/upload
-    - ../../data/limesurvey/config:/var/www/html/application/config
+    - ENV_FILENAME=docker.env
+    - C_FORCE_ROOT=true
+    - DB_USER={{ ONTASK_DB_USER }}
+    - DB_NAME={{ ONTASK_DB_NAME }}
+    - DATABASE_URL={{ ONTASK_DATABASE_URL }}
+    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_PASSWORD }}
+    - REDIS_URL={{ ONTASK_REDIS_URL }}
+    - DEBUG=True
+    - SECRET_KEY={{ ONTASK_SECRET_KEY }}
+    - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
+    - DJANGO_SETTINGS_MODULE=settings.production
+    - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
+    - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
+    - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   restart: unless-stopped
+  volumes:
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
+  command: ./manage.py runserver 0.0.0.0:8080
   depends_on:
-    - mysql
-{% endif %}
+    - postgres
+    - redis
+
+ontask-worker:
+  restart: unless-stopped
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  environment:
+    - ENV_FILENAME=docker.env
+    - C_FORCE_ROOT=true
+    - DB_USER={{ ONTASK_DB_USER }}
+    - DB_NAME={{ ONTASK_DB_NAME }}
+    - DATABASE_URL={{ ONTASK_DATABASE_URL }}
+    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_PASSWORD }}
+    - REDIS_URL={{ ONTASK_REDIS_URL }}
+    - DEBUG=True
+    - SECRET_KEY={{ ONTASK_SECRET_KEY }}
+    - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
+    - DJANGO_SETTINGS_MODULE=settings.production
+    - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
+    - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
+    - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
+  volumes:
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
+  command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
+  depends_on:
+    - ontask
+    - postgres
+    - redis
+
+postgres:
+  image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
+  environment:
+    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+  user: "999:999"
+  volumes:
+    - ../../data/ontask/postgres/data:/var/lib/postgresql/data
+  restart: unless-stopped
+  ports:
+  - "5432:5432"

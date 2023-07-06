@@ -21,12 +21,12 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         # Prefix your setting names with 'ONTASK_'.
         ("ONTASK_VERSION", __version__),
         ("ONTASK_HOST", "ontask.{{ LMS_HOST }}"),
-        ("ONTASK_PORT", "8080"),
         ("ONTASK_DB_NAME", "ontask"),
         ("ONTASK_DB_USER", "ontask"),
-        ("ONTASK_DOCKER_IMAGE", ""),
-        ("ONTASK_WORKER_DOCKER_IMAGE", ""),
-        ("ONTASK_DATABASE_URL", "postgres://postgres:ontask@ontask-postgres:5432/ontask"),
+        ("ONTASK_POSTGRES_HOST", "postgres"),
+        ("ONTASK_DOCKER_IMAGE", "docker.io/edunext/ontask:0.1.0"),
+        ("ONTASK_POSTGRES_DOCKER_IMAGE", "postgres:13.11-bullseye"),
+        ("ONTASK_DATABASE_URL", "postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_POSTGRES_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }}"),
         ("ONTASK_REDIS_URL", "redis://:{{ REDIS_PASSWORD }}@{{ REDIS_HOST }}:{{ REDIS_PORT }}/1"),
     ]
 )
@@ -44,7 +44,8 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         ("ONTASK_SUPERUSER_EMAIL", "admin@mail.com"),
         ("ONTASK_SUPERUSER_PWD", "{{ 24|random_string }}"),
         ("ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER", "admin@mail.com"),
-        ("ONTASK_DJANGO_SETTINGS_MODULE", "development"),
+        ("ONTASK_POSTGRES_ROOT_USERNAME", "postgres"),
+        ("ONTASK_POSTGRES_ROOT_PASSWORD", "{{ 8|random_string }}"),
     ]
 )
 
@@ -71,7 +72,8 @@ MY_INIT_TASKS: list[tuple[str, tuple[str, ...]]] = [
     # tutorontask/templates/ontask/jobs/init/lms.sh
     # And then add the line:
     ### ("lms", ("ontask", "jobs", "init", "lms.sh")),
-    ("postgres", ("ontask", "jobs", "init", "postgres.sh")),
+    ("postgres", ("ontask", "jobs", "init", "postgres", "init.sh")),
+    ("ontask", ("ontask", "jobs", "init", "ontask", "init.sh")),
 ]
 
 
@@ -110,12 +112,6 @@ hooks.Filters.IMAGES_BUILD.add_items(
             "ontask",
             ("plugins", "ontask", "build", "ontask"),
             "{{ ONTASK_DOCKER_IMAGE }}",
-            (),
-        ),
-        (
-            "ontask-worker",
-            ("plugins", "ontask", "build", "ontask-worker"),
-            "{{ ONTASK_WORKER_DOCKER_IMAGE }}",
             (),
         ),
     ]

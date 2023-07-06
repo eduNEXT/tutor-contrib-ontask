@@ -1,4 +1,4 @@
-ontask:
+ontask-job:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
     - "8080:8080"
@@ -20,12 +20,11 @@ ontask:
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/docker.env:ro
-  command: ./manage.py runserver 0.0.0.0:8080
   depends_on:
     - postgres
     - redis
 
-ontask-worker:
+ontask-worker-job:
   restart: unless-stopped
   image: {{ ONTASK_DOCKER_IMAGE }}
   environment:
@@ -45,19 +44,12 @@ ontask-worker:
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/docker.env:ro
-  command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
     - ontask
     - postgres
     - redis
 
-postgres:
+postgres-job:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
-  environment:
-    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
-  user: "999:999"
-  volumes:
-    - ../../data/ontask/postgres/data:/var/lib/postgresql/data
-  restart: unless-stopped
-  ports:
-  - "5432:5432"
+  depends_on:
+    - postgres

@@ -1,8 +1,5 @@
-FROM python:3.9-slim-buster
-
-# Python Envs
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+FROM docker.io/ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Project Files and Settings
 ENV PROJECT=ontask
@@ -22,20 +19,40 @@ RUN apt-get update && apt-get upgrade -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
+###### Install python with pyenv in /opt/pyenv and create virtualenv in /ontask/venv
+# https://github.com/pyenv/pyenv/wiki/Common-build-problems#prerequisites
+RUN apt update && \
+    apt install -y libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+
+# Install pyenv
+# https://www.python.org/downloads/
+# https://github.com/pyenv/pyenv/releases
+ARG PYTHON_VERSION=3.9.17
+ENV PYENV_ROOT /opt/pyenv
+RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.3.21 --depth 1
+
+# Install Python
+RUN $PYENV_ROOT/bin/pyenv install $PYTHON_VERSION
+
+# Create virtualenv
+RUN $PYENV_ROOT/versions/$PYTHON_VERSION/bin/python -m venv /app/venv
+
+###### Checkout OnTask code
+
+RUN mkdir -p /app/ontask && \
+    git clone https://github.com/abelardopardo/ontask_b.git --branch Version_10_3 --depth 1 /app/ontask
+WORKDIR /app/ontask
+
+###### Turn on virtualenv and install requirements
+
+# Turn on virtualenv
+ENV PATH /app/venv/bin:${PATH}
+ENV VIRTUAL_ENV /app/venv/
+
 # Install Requirements
-COPY ./requirements/ /requirements/
-RUN pip install -r /requirements/development.txt
+RUN pip install -r /app/ontask/requirements/base.txt
+RUN pip install -r /app/ontask/requirements/essential.txt
 
-COPY ./docker/server/docker-entrypoint.sh /docker-entrypoint.sh
-RUN sed -i 's/\r$//g' /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-COPY ./docker/server/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-
-# Copy Django project
-WORKDIR $PROJECT_DIR
-COPY . $PROJECT_DIR
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+EXPOSE 8080
