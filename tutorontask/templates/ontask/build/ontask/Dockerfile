@@ -56,3 +56,5 @@ RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
 
 EXPOSE 8080
+
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

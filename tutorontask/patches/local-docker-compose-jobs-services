@@ -19,7 +19,7 @@ ontask-job:
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   restart: unless-stopped
   volumes:
-    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
   depends_on:
     - postgres
     - redis
@@ -43,7 +43,7 @@ ontask-worker-job:
     - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   volumes:
-    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
   depends_on:
     - ontask
     - postgres

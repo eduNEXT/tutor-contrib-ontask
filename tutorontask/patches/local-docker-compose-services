@@ -19,8 +19,8 @@ ontask:
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   restart: unless-stopped
   volumes:
-    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
-  command: ./manage.py runserver 0.0.0.0:8080
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
   depends_on:
     - postgres
     - redis
@@ -44,7 +44,8 @@ ontask-worker:
     - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   volumes:
-    - ../plugins/ontask/apps/docker/production/docker.env:/app/docker.env:ro
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
   command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
     - ontask

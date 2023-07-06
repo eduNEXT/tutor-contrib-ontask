@@ -27,7 +27,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("ONTASK_DOCKER_IMAGE", "docker.io/edunext/ontask:0.1.0"),
         ("ONTASK_POSTGRES_DOCKER_IMAGE", "postgres:13.11-bullseye"),
         ("ONTASK_DATABASE_URL", "postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_POSTGRES_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }}"),
-        ("ONTASK_REDIS_URL", "redis://:{{ REDIS_PASSWORD }}@{{ REDIS_HOST }}:{{ REDIS_PORT }}/1"),
+        ("ONTASK_REDIS_URL", "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"),
     ]
 )
 

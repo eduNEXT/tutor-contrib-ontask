@@ -13,13 +13,14 @@ ontask:
     - DEBUG=True
     - SECRET_KEY={{ ONTASK_SECRET_KEY }}
     - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
-    - DJANGO_SETTINGS_MODULE=settings.production
+    - DJANGO_SETTINGS_MODULE=settings.development
     - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
     - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   restart: unless-stopped
   volumes:
-    - ../plugins/ontask/apps/docker/development/docker.env:/app/docker.env:ro
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
   command: ./manage.py runserver 0.0.0.0:8080
   depends_on:
     - postgres
@@ -39,12 +40,13 @@ ontask-worker:
     - DEBUG=True
     - SECRET_KEY={{ ONTASK_SECRET_KEY }}
     - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
-    - DJANGO_SETTINGS_MODULE=settings.production
+    - DJANGO_SETTINGS_MODULE=settings.development
     - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
     - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
     - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   volumes:
-    - ../plugins/ontask/apps/docker/development/docker.env:/app/docker.env:ro
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
   command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
     - ontask
