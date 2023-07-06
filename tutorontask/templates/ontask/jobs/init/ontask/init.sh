@@ -16,7 +16,7 @@ done
 ./manage.py initialize_db /app/ontask/scripts/initial_learners.csv
 
 >&2 echo "Creating superuser "
-./manage.py create_superuser -u '$SUPERUSER_NAME' -e '$SUPERUSER_EMAIL' -p '$SUPERUSER_PWD'
+./manage.py create_superuser -u $SUPERUSER_NAME -e $SUPERUSER_EMAIL -p $SUPERUSER_PWD
 
 # Collect static
 >&2 echo "Collecting static"
