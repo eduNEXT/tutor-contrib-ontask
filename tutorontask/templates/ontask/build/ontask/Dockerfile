@@ -3,9 +3,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Project Files and Settings
 ENV PROJECT=ontask
-ENV PROJECT_DIR=/app
+ENV PROJECT_DIR=/app/ontask
 ENV PROJECT_PATH=${PROJECT_DIR}
-ENV CELERY_BIN=/usr/local/bin/celery
+ENV CELERY_BIN=/app/venv/bin/celery
 
 # Set up packages
 RUN apt-get update && apt-get upgrade -y \
@@ -26,6 +26,9 @@ RUN apt update && \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
 
+# Install apache2
+RUN apt-get update && apt-get install -y apache2 apache2-utils libapache2-mod-wsgi-py3
+
 # Install pyenv
 # https://www.python.org/downloads/
 # https://github.com/pyenv/pyenv/releases
@@ -45,6 +48,10 @@ RUN mkdir -p /app/ontask && \
     git clone https://github.com/abelardopardo/ontask_b.git --branch Version_10_3 --depth 1 /app/ontask
 WORKDIR /app/ontask
 
+###### Copy configuration files
+# Copy apache config
+RUN cp /app/ontask/docker/server/000-default.conf /etc/apache2/sites-available
+
 ###### Turn on virtualenv and install requirements
 
 # Turn on virtualenv
@@ -54,6 +61,18 @@ ENV VIRTUAL_ENV /app/venv/
 # Install Requirements
 RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
+
+###### Change ownership of the files
+RUN chown -R www-data:www-data /app/ontask
+
+###### Create log files
+RUN mkdir -p /app/ontask/logs
+RUN echo "Touching log files" \
+touch /app/ontask/logs/django.log \
+touch /app/ontask/logs/project.log \
+touch /app/ontask/logs/scheduler.log \
+touch /app/ontask/logs/script.log \
+touch /app/ontask/logs/celery.log
 
 EXPOSE 8080
 

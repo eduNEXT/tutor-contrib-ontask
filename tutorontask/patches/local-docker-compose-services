@@ -46,6 +46,7 @@ ontask-worker:
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/settings/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
   command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
     - ontask
@@ -60,5 +61,3 @@ postgres:
   volumes:
     - ../../data/ontask/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
-  ports:
-  - "5432:5432"
