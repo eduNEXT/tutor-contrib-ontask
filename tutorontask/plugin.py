@@ -128,6 +128,10 @@ hooks.Filters.IMAGES_PULL.add_items(
         ###     "myimage",
         ###     "docker.io/myimage:{{ ONTASK_VERSION }}",
         ### ),
+        (
+            "ontask",
+            "{{ ONTASK_DOCKER_IMAGE }}",
+        ),
     ]
 )
 
@@ -142,6 +146,10 @@ hooks.Filters.IMAGES_PUSH.add_items(
         ###     "myimage",
         ###     "docker.io/myimage:{{ ONTASK_VERSION }}",
         ### ),
+        (
+            "ontask",
+            "{{ ONTASK_DOCKER_IMAGE }}",
+        ),
     ]
 )
 
