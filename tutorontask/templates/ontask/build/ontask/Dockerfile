@@ -48,10 +48,6 @@ RUN mkdir -p /app/ontask && \
     git clone https://github.com/abelardopardo/ontask_b.git --branch Version_10_3 --depth 1 /app/ontask
 WORKDIR /app/ontask
 
-###### Copy configuration files
-# Copy apache config
-RUN cp /app/ontask/docker/server/000-default.conf /etc/apache2/sites-available
-
 ###### Turn on virtualenv and install requirements
 
 # Turn on virtualenv
@@ -61,9 +57,7 @@ ENV VIRTUAL_ENV /app/venv/
 # Install Requirements
 RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
-
-###### Change ownership of the files
-RUN chown -R www-data:www-data /app/ontask
+RUN pip install uwsgi==2.0.21
 
 ###### Create log files
 RUN mkdir -p /app/ontask/logs
@@ -76,4 +70,8 @@ touch /app/ontask/logs/celery.log
 
 EXPOSE 8080
 
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+# Copy the default uWSGI configuration
+COPY settings/uwsgi.ini .
+
+# Run server
+CMD uwsgi uwsgi.ini

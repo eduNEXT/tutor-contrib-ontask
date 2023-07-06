@@ -20,7 +20,6 @@ ontask:
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
-    - ../plugins/ontask/apps/settings/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
   depends_on:
     - postgres
     - redis
