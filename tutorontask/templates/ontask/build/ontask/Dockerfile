@@ -6,6 +6,7 @@ ENV PROJECT=ontask
 ENV PROJECT_DIR=/app/ontask
 ENV PROJECT_PATH=${PROJECT_DIR}
 ENV CELERY_BIN=/app/venv/bin/celery
+ENV ENV_FILENAME=/app/ontask/docker.env
 
 # Set up packages
 RUN apt-get update && apt-get upgrade -y \
@@ -19,7 +20,9 @@ RUN apt-get update && apt-get upgrade -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-###### Install python with pyenv in /opt/pyenv and create virtualenv in /ontask/venv
+###### Install required packages
+
+# Install python with pyenv in /opt/pyenv and create virtualenv in /ontask/venv
 # https://github.com/pyenv/pyenv/wiki/Common-build-problems#prerequisites
 RUN apt update && \
     apt install -y libssl-dev zlib1g-dev libbz2-dev \
@@ -59,7 +62,9 @@ RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
 RUN pip install uwsgi==2.0.21
 
-###### Create log files
+###### Create necessary directories and files
+
+# Create logs directory
 RUN mkdir -p /app/ontask/logs
 RUN echo "Touching log files" \
 touch /app/ontask/logs/django.log \
@@ -68,10 +73,21 @@ touch /app/ontask/logs/scheduler.log \
 touch /app/ontask/logs/script.log \
 touch /app/ontask/logs/celery.log
 
-EXPOSE 8080
-
 # Copy the default uWSGI configuration
 COPY settings/uwsgi.ini .
 
-# Run server
+###### Set entrypoint
+
+# Copy the entrypoint file
+COPY docker-entrypoint.sh /usr/local/bin/
+
+# Set the executable permission for the entrypoint file
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+###### Set CMD
 CMD uwsgi uwsgi.ini
+
+EXPOSE 8080

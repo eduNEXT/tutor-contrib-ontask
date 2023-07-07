@@ -3,19 +3,8 @@ ontask:
   ports:
     - "8080:8080"
   environment:
-    - ENV_FILENAME=docker.env
+    - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
-    - DB_USER={{ ONTASK_DB_USER }}
-    - DB_NAME={{ ONTASK_DB_NAME }}
-    - DATABASE_URL={{ ONTASK_DATABASE_URL }}
-    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_PASSWORD }}
-    - REDIS_URL={{ ONTASK_REDIS_URL }}
-    - SECRET_KEY={{ ONTASK_SECRET_KEY }}
-    - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
-    - DJANGO_SETTINGS_MODULE=settings.production
-    - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
-    - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
-    - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
@@ -28,20 +17,8 @@ ontask-worker:
   restart: unless-stopped
   image: {{ ONTASK_DOCKER_IMAGE }}
   environment:
-    - ENV_FILENAME=docker.env
+    - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
-    - DB_USER={{ ONTASK_DB_USER }}
-    - DB_NAME={{ ONTASK_DB_NAME }}
-    - DATABASE_URL={{ ONTASK_DATABASE_URL }}
-    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_PASSWORD }}
-    - REDIS_URL={{ ONTASK_REDIS_URL }}
-    - DEBUG=True
-    - SECRET_KEY={{ ONTASK_SECRET_KEY }}
-    - EMAIL_ACTION_NOTIFICATION_SENDER={{ ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER }}
-    - DJANGO_SETTINGS_MODULE=settings.production
-    - SUPERUSER_NAME={{ ONTASK_SUPERUSER_NAME }}
-    - SUPERUSER_EMAIL={{ ONTASK_SUPERUSER_EMAIL }}
-    - SUPERUSER_PWD={{ ONTASK_SUPERUSER_PWD }}
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
