@@ -29,6 +29,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("ONTASK_DATABASE_URL", "postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_POSTGRES_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }}"),
         ("ONTASK_REDIS_URL", "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"),
         ("ONTASK_APP_VERSION", "Version_10_3"),
+        ("ONTASK_EXTRA_PRODUCTION_SETTINGS", ""),
     ]
 )
 

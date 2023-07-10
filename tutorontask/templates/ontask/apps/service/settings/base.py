@@ -73,16 +73,29 @@ EMAIL_ACTION_NOTIFICATION_SENDER = env('EMAIL_ACTION_NOTIFICATION_SENDER')
 EMAIL_ACTION_NOTIFICATION_SUBJECT = env(
     'EMAIL_ACTION_NOTIFICATION_SUBJECT',
     default='OnTask: Action executed')
+{% raw %}
 EMAIL_ACTION_NOTIFICATION_TEMPLATE = env(
     'EMAIL_ACTION_NOTIFICATION_TEMPLATE',
     default="""<html>
 <head/>
 <body>
-This is a default message for notifications. Please, change it.
+<p>Dear {{ user.name }}</p>
+
+<p>This message is to inform you that on {{ email_sent_datetime }}
+{{ num_messages }} email{% if num_messages > 1 %}s{% endif %} were sent
+resulting from the execution of the action with name "{{ action.name }}".</p>
+
+{% if filter_present %}
+<p>The action had a filter that reduced the number of messages from
+{{ num_rows }} to {{ num_selected }}.</p>
+{% else %}
+<p>All the data rows stored in the workflow table were used.</p>
+{% endif %}
 
 Regards.
 The OnTask Support Team
 </body></html>""")
+{% endraw %}
 
 EMAIL_BURST = env.int('EMAIL_BURST', default=0)
 EMAIL_BURST_PAUSE = env.int('EMAIL_BURST_PAUSE', default=0)
@@ -479,6 +492,42 @@ TINYMCE_DEFAULT_CONFIG = {
     "toolbar_mode": "sliding",
 }
 TINYMCE_COMPRESSOR = False
+
+# django-cors-headers
+# ------------------------------------------------------------------------------
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = []
+# CORS_ORIGIN_REGEX_WHITELIST = []
+
+# Additional configuration variables (read django-auth-ldap documentation)
+# AUTH_LDAP_CONNECTION_OPTIONS = {
+# }
+# AUTH_LDAP_BIND_DN = "cn=admin,dc=bogus,dc=com"
+# AUTH_LDAP_USER_SEARCH = LDAPSearch(
+#     "ou=people,dc=bogus,dc=com",
+#     ldap.SCOPE_SUBTREE,
+#     "(uid=%(user)s)")
+# AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=people,dc=bogus,dc=com"
+# AUTH_LDAP_START_TLS = True
+# AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=groups,dc=example,dc=com",
+#     ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
+# )
+# AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
+# AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=groups,dc=example,dc=com"
+# AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=groups,dc=example,dc=com"
+# AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn"}
+# AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+#     "is_active": "cn=active,ou=groups,dc=example,dc=com",
+#     "is_staff": (
+#         LDAPGroupQuery("cn=staff,ou=groups,dc=example,dc=com") |
+#         LDAPGroupQuery("cn=admin,ou=groups,dc=example,dc=com")
+#     ),
+#     "is_superuser": "cn=superuser,ou=groups,dc=example,dc=com"
+# }
+# AUTH_LDAP_ALWAYS_UPDATE_USER = True
+# AUTH_LDAP_FIND_GROUP_PERMS = True
+# AUTH_LDAP_CACHE_GROUPS = True
+# AUTH_LDAP_GROUP_CACHE_TIMEOUT = 300
 
 
 def show_configuration() -> None:

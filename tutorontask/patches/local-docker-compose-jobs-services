@@ -8,6 +8,8 @@ ontask-job:
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
   depends_on:
     - postgres
     - redis
@@ -20,6 +22,8 @@ ontask-worker-job:
     - C_FORCE_ROOT=true
   volumes:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
   depends_on:
     - ontask
     - postgres
