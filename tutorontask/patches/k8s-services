@@ -1,3 +1,4 @@
+{% if RUN_ONTASK %}
 ---
 apiVersion: v1
 kind: Service
@@ -27,3 +28,4 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: postgres
+{% endif %}

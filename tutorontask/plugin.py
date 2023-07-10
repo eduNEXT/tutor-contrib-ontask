@@ -48,6 +48,7 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         ("ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER", "admin@mail.com"),
         ("ONTASK_POSTGRES_ROOT_USERNAME", "postgres"),
         ("ONTASK_POSTGRES_ROOT_PASSWORD", "{{ 8|random_string }}"),
+        ("RUN_ONTASK", True),
     ]
 )
 

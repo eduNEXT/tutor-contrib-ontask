@@ -1,3 +1,4 @@
+{% if RUN_ONTASK %}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -114,3 +115,4 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: ontask
+{% if RUN_ONTASK %}
