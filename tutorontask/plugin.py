@@ -20,6 +20,15 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         # Each new setting is a pair: (setting_name, default_value).
         # Prefix your setting names with 'ONTASK_'.
         ("ONTASK_VERSION", __version__),
+        ("ONTASK_HOST", "ontask.{{ LMS_HOST }}"),
+        ("ONTASK_DB_NAME", "ontask"),
+        ("ONTASK_DB_USER", "ontask"),
+        ("ONTASK_POSTGRES_HOST", "postgres"),
+        ("ONTASK_DOCKER_IMAGE", "docker.io/edunext/ontask:0.1.1"),
+        ("ONTASK_POSTGRES_DOCKER_IMAGE", "postgres:13.11-bullseye"),
+        ("ONTASK_DATABASE_URL", "postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_POSTGRES_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }}"),
+        ("ONTASK_REDIS_URL", "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"),
+        ("ONTASK_APP_VERSION", "Version_10_3"),
     ]
 )
 
@@ -30,7 +39,14 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         # Each new setting is a pair: (setting_name, unique_generated_value).
         # Prefix your setting names with 'ONTASK_'.
         # For example:
-        ### ("ONTASK_SECRET_KEY", "{{ 24|random_string }}"),
+        ("ONTASK_SECRET_KEY", "{{ 24|random_string }}"),
+        ("ONTASK_POSTGRES_PASSWORD", "{{ 8|random_string }}"),
+        ("ONTASK_SUPERUSER_NAME", "admin"),
+        ("ONTASK_SUPERUSER_EMAIL", "admin@mail.com"),
+        ("ONTASK_SUPERUSER_PWD", "{{ 24|random_string }}"),
+        ("ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER", "admin@mail.com"),
+        ("ONTASK_POSTGRES_ROOT_USERNAME", "postgres"),
+        ("ONTASK_POSTGRES_ROOT_PASSWORD", "{{ 8|random_string }}"),
     ]
 )
 
@@ -57,6 +73,8 @@ MY_INIT_TASKS: list[tuple[str, tuple[str, ...]]] = [
     # tutorontask/templates/ontask/jobs/init/lms.sh
     # And then add the line:
     ### ("lms", ("ontask", "jobs", "init", "lms.sh")),
+    ("postgres", ("ontask", "jobs", "init", "postgres", "init.sh")),
+    ("ontask", ("ontask", "jobs", "init", "ontask", "init.sh")),
 ]
 
 
@@ -91,6 +109,12 @@ hooks.Filters.IMAGES_BUILD.add_items(
         ###     "docker.io/myimage:{{ ONTASK_VERSION }}",
         ###     (),
         ### ),
+        (
+            "ontask",
+            ("plugins", "ontask", "build", "ontask"),
+            "{{ ONTASK_DOCKER_IMAGE }}",
+            (),
+        ),
     ]
 )
 
@@ -105,6 +129,10 @@ hooks.Filters.IMAGES_PULL.add_items(
         ###     "myimage",
         ###     "docker.io/myimage:{{ ONTASK_VERSION }}",
         ### ),
+        (
+            "ontask",
+            "{{ ONTASK_DOCKER_IMAGE }}",
+        ),
     ]
 )
 
@@ -119,6 +147,10 @@ hooks.Filters.IMAGES_PUSH.add_items(
         ###     "myimage",
         ###     "docker.io/myimage:{{ ONTASK_VERSION }}",
         ### ),
+        (
+            "ontask",
+            "{{ ONTASK_DOCKER_IMAGE }}",
+        ),
     ]
 )
 

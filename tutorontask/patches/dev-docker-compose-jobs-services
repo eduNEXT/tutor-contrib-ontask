@@ -1,0 +1,31 @@
+ontask-job:
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  ports:
+    - "8080:8080"
+  environment:
+    - ENV_FILENAME=/app/ontask/docker.env
+    - C_FORCE_ROOT=true
+  restart: unless-stopped
+  volumes:
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+  depends_on:
+    - postgres
+    - redis
+
+ontask-worker-job:
+  restart: unless-stopped
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  environment:
+    - ENV_FILENAME=/app/ontask/docker.env
+    - C_FORCE_ROOT=true
+  volumes:
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+  depends_on:
+    - ontask
+    - postgres
+    - redis
+
+postgres-job:
+  image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
+  depends_on:
+    - postgres

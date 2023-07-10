@@ -1,0 +1,4 @@
+# OnTask
+{{ ONTASK_HOST }}{$default_site_port} {
+    import proxy "ontask:8080"
+}

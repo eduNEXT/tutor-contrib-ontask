@@ -1,0 +1,40 @@
+ontask:
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  ports:
+    - "8080:8080"
+  environment:
+    - ENV_FILENAME=/app/ontask/docker.env
+    - C_FORCE_ROOT=true
+  restart: unless-stopped
+  volumes:
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
+  command: ./manage.py runserver 0.0.0.0:8080
+  depends_on:
+    - postgres
+    - redis
+
+ontask-worker:
+  restart: unless-stopped
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  environment:
+    - ENV_FILENAME=/app/ontask/docker.env
+    - C_FORCE_ROOT=true
+  volumes:
+    - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/settings/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
+  command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
+  depends_on:
+    - ontask
+    - postgres
+    - redis
+
+postgres:
+  image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
+  environment:
+    - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+  user: "999:999"
+  volumes:
+    - ../../data/ontask/postgres/data:/var/lib/postgresql/data
+  restart: unless-stopped
