@@ -29,9 +29,6 @@ RUN apt update && \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
 
-# Install apache2
-RUN apt-get update && apt-get install -y apache2 apache2-utils libapache2-mod-wsgi-py3
-
 # Install pyenv
 # https://www.python.org/downloads/
 # https://github.com/pyenv/pyenv/releases
