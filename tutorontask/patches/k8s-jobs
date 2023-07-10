@@ -1,3 +1,4 @@
+{% if RUN_ONTASK %}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -32,7 +33,9 @@ spec:
         - name: settings
           configMap:
             name: ontask-settings
+{% endif %}
 
+{% if RUN_POSTGRES %}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -60,3 +63,4 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: ontask
+{% endif %}

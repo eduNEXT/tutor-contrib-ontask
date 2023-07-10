@@ -30,7 +30,7 @@ spec:
           volumeMounts:
             - mountPath: /app/ontask
               name: docker-env
-            - mountPath: /app/ontask
+            - mountPath: /app/ontask/settings
               name: settings
       restartPolicy: Always
       volumes:
@@ -70,7 +70,7 @@ spec:
           volumeMounts:
             - mountPath: /app/ontask
               name: docker-env
-            - mountPath: /app/ontask
+            - mountPath: /app/ontask/settings
               name: settings
           command: ["supervisord"]
           args: ["-n", "-c", "/app/ontask/supervisor/supervisor.conf"]
@@ -82,7 +82,9 @@ spec:
         - name: settings
           configMap:
             name: ontask-settings
+{% endif %}
 
+{% if RUN_POSTGRES %}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -114,5 +116,5 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: ontask
-{% if RUN_ONTASK %}
+            claimName: postgres
+{% endif %}

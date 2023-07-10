@@ -1,12 +1,12 @@
-{% if RUN_ONTASK %}
+{% if RUN_POSTGRES %}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ontask
+  name: postgres
   labels:
     app.kubernetes.io/component: volume
-    app.kubernetes.io/name: ontask
+    app.kubernetes.io/name: postgres
 spec:
   accessModes:
     - ReadWriteOnce
