@@ -1,0 +1,116 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ontask
+  labels:
+    app.kubernetes.io/name: ontask
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ontask
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ontask
+    spec:
+      containers:
+        - name: ontask
+          env:
+            - name: ENV_FILENAME
+              value: "/app/ontask/docker.env"
+            - name: C_FORCE_ROOT
+              value: "true"
+          image: {{ ONTASK_DOCKER_IMAGE }}
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /app/ontask
+              name: docker-env
+            - mountPath: /app/ontask
+              name: settings
+      restartPolicy: Always
+      volumes:
+        - name: docker-env
+          configMap:
+            name: ontask-env
+        - name: settings
+          configMap:
+            name: ontask-settings
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ontask-worker
+  labels:
+    app.kubernetes.io/name: ontask-worker
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ontask-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ontask-worker
+    spec:
+      containers:
+        - name: ontask-worker
+          env:
+            - name: ENV_FILENAME
+              value: "/app/ontask/docker.env"
+            - name: C_FORCE_ROOT
+              value: "true"
+          image: {{ ONTASK_DOCKER_IMAGE }}
+          volumeMounts:
+            - mountPath: /app/ontask
+              name: docker-env
+            - mountPath: /app/ontask
+              name: settings
+          command: ["supervisord"]
+          args: ["-n", "-c", "/app/ontask/supervisor/supervisor.conf"]
+      restartPolicy: Always
+      volumes:
+        - name: docker-env
+          configMap:
+            name: ontask-env
+        - name: settings
+          configMap:
+            name: ontask-settings
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app.kubernetes.io/name: postgres
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+    spec:
+      containers:
+        - name: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              value: {{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+          image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: data
+      restartPolicy: Always
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ontask

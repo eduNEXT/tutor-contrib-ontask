@@ -1,0 +1,13 @@
+- name: ontask-env
+  files:{% for file in "ontask/apps/docker/production/"|walk_templates %}
+  - plugins/{{ file }}{% endfor %}
+  options:
+    labels:
+        app.kubernetes.io/name: ontask
+
+- name: ontask-settings
+  files:{% for file in "ontask/apps/settings/"|walk_templates %}
+  - plugins/{{ file }}{% endfor %}
+  options:
+    labels:
+        app.kubernetes.io/name: ontask
