@@ -1,7 +1,7 @@
 """Configuration for production."""
 import logging.config
 
-from tutorontask.templates.ontask.apps.service.base import *  # NOQA
+from settings.base import *  # NOQA
 
 # Security features
 # -----------------------------------------------------------------------------
