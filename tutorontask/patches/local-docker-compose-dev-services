@@ -36,5 +36,5 @@ postgres:
     - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
   user: "999:999"
   volumes:
-    - ../../data/ontask/postgres/data:/var/lib/postgresql/data
+    - ../../data/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
