@@ -8,7 +8,7 @@ ontask:
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
   command: ./manage.py runserver 0.0.0.0:8080
   depends_on:
     - postgres
@@ -22,8 +22,8 @@ ontask-worker:
     - C_FORCE_ROOT=true
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/settings/base.py:/app/ontask/settings/base.py:ro
-    - ../plugins/ontask/apps/settings/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
+    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/supervisor/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
   command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
     - ontask
