@@ -22,15 +22,23 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 0
         volumeMounts:
-          - mountPath: /app/ontask
-            name: docker-env
-          - mountPath: /app/ontask
-            name: settings
+          - name: docker-env
+            mountPath: /app/ontask/docker.env
+            subPath: docker.env
+          - name: base-settings
+            mountPath: /app/ontask/settings/base.py
+            subPath: base.py
+          - name: production-settings
+            mountPath: /app/ontask/settings/production.py
+            subPath: production.py
       volumes:
         - name: docker-env
           configMap:
             name: ontask-env
-        - name: settings
+        - name: base-settings
+          configMap:
+            name: ontask-settings
+        - name: production-settings
           configMap:
             name: ontask-settings
 {% endif %}
@@ -57,8 +65,8 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 0
         volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: data
+          - mountPath: /var/lib/postgresql
+            name: data
       volumes:
         - name: data
           persistentVolumeClaim:

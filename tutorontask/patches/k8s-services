@@ -7,13 +7,16 @@ metadata:
   labels:
     app.kubernetes.io/name: ontask
 spec:
+  type: ClusterIP
   ports:
     - port: 8080
       protocol: TCP
       name: http
   selector:
     app.kubernetes.io/name: ontask
+{% endif %}
 
+{% if RUN_POSTGRES %}
 ---
 apiVersion: v1
 kind: Service
