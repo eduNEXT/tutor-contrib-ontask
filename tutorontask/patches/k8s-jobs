@@ -1,0 +1,74 @@
+{% if RUN_ONTASK %}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ontask-job
+  labels:
+    app.kubernetes.io/component: job
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: ontask
+        env:
+          - name: ENV_FILENAME
+            value: "/app/ontask/docker.env"
+          - name: C_FORCE_ROOT
+            value: "true"
+        image: {{ ONTASK_DOCKER_IMAGE }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        volumeMounts:
+          - name: docker-env
+            mountPath: /app/ontask/docker.env
+            subPath: docker.env
+          - name: base-settings
+            mountPath: /app/ontask/settings/base.py
+            subPath: base.py
+          - name: production-settings
+            mountPath: /app/ontask/settings/production.py
+            subPath: production.py
+      volumes:
+        - name: docker-env
+          configMap:
+            name: ontask-env
+        - name: base-settings
+          configMap:
+            name: ontask-settings
+        - name: production-settings
+          configMap:
+            name: ontask-settings
+{% endif %}
+
+{% if RUN_POSTGRES %}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-job
+  labels:
+    app.kubernetes.io/component: job
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: postgres
+        env:
+          - name: POSTGRES_PASSWORD
+            value: {{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+        image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        volumeMounts:
+          - mountPath: /var/lib/postgresql
+            name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ontask
+{% endif %}

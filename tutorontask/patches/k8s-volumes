@@ -1,0 +1,16 @@
+{% if RUN_POSTGRES %}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres
+  labels:
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/name: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+{% endif %}

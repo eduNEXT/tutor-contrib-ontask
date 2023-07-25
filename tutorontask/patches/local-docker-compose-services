@@ -1,3 +1,4 @@
+{% if RUN_ONTASK %}
 ontask:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
@@ -39,3 +40,4 @@ postgres:
   volumes:
     - ../../data/ontask/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
+{% endif %}

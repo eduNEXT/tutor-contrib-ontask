@@ -30,6 +30,8 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("ONTASK_REDIS_URL", "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"),
         ("ONTASK_APP_VERSION", "Version_10_3"),
         ("ONTASK_EXTRA_PRODUCTION_SETTINGS", ""),
+        ("RUN_ONTASK", True),
+        ("RUN_POSTGRES", True),
     ]
 )
 

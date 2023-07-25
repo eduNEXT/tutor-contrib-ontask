@@ -1,3 +1,4 @@
+{% if RUN_ONTASK %}
 ontask-job:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
@@ -33,3 +34,4 @@ postgres-job:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
   depends_on:
     - postgres
+{% endif %}
