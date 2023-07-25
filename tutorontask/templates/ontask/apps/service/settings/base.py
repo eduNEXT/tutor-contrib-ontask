@@ -344,7 +344,7 @@ USE_TZ = True
 
 WSGI_APPLICATION = 'wsgi.application'
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'ALLOW-FROM {{LMS_HOST}}'
 
 # Django Auth
 # -----------------------------------------------------------------------------
