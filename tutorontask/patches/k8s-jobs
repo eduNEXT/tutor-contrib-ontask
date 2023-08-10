@@ -43,7 +43,6 @@ spec:
             name: ontask-settings
 {% endif %}
 
-{% if RUN_POSTGRES %}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -56,19 +55,5 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: postgres
-        env:
-          - name: POSTGRES_PASSWORD
-            value: {{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+      - name: postgres-job
         image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 0
-        volumeMounts:
-          - mountPath: /var/lib/postgresql
-            name: data
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: ontask
-{% endif %}
