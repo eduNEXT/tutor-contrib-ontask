@@ -26,7 +26,7 @@ spec:
               value: "true"
           image: {{ ONTASK_DOCKER_IMAGE }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ ONTASK_PORT }}
           volumeMounts:
             - name: docker-env
               mountPath: /app/ontask/docker.env

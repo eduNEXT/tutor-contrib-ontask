@@ -1,15 +1,15 @@
 ontask:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - "8080:8080"
+    - 8080:{{ ONTASK_PORT }}
   environment:
     - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
-  command: ./manage.py runserver 0.0.0.0:8080
+    - ../plugins/ontask/apps/service/settings/development.py:/app/ontask/settings/development.py:ro
+  command: ./manage.py runserver 0.0.0.0:{{ ONTASK_PORT }}
   depends_on:
     - postgres
     - redis
@@ -22,7 +22,7 @@ ontask-worker:
     - C_FORCE_ROOT=true
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/service/settings/development.py:/app/ontask/settings/development.py:ro
     - ../plugins/ontask/apps/supervisor/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
   command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
   depends_on:
@@ -34,7 +34,12 @@ postgres:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
   environment:
     - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+    - PGDATA=/var/lib/postgresql/data/pgdata
   user: "999:999"
   volumes:
     - ../../data/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
+  expose:
+    - "5433"
+  ports:
+    - "5433:5433"

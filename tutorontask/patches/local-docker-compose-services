@@ -2,7 +2,7 @@
 ontask:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - "8080:8080"
+    - 8080:{{ ONTASK_PORT }}
   environment:
     - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
@@ -40,4 +40,8 @@ postgres:
   volumes:
     - ../../data/ontask/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
+  expose:
+    - "5433"
+  ports:
+    - "5433:5433"
 {% endif %}

@@ -2,7 +2,7 @@
 ontask-job:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - "8080:8080"
+    - 8080:{{ ONTASK_PORT }}
   environment:
     - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
