@@ -13,10 +13,4 @@
     labels:
         app.kubernetes.io/name: ontask
 
-- name: ontask-supervisor
-  files:{% for file in "ontask/apps/supervisor/"|walk_templates %}
-  - plugins/{{ file }}{% endfor %}
-  options:
-    labels:
-        app.kubernetes.io/name: ontask
 {% endif %}

@@ -13,6 +13,7 @@ ontask:
   depends_on:
     - postgres
     - redis
+    - ontask-worker
 
 ontask-worker:
   restart: unless-stopped
@@ -23,23 +24,15 @@ ontask-worker:
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/service/settings/development.py:/app/ontask/settings/development.py:ro
-    - ../plugins/ontask/apps/supervisor/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
-  command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
-  depends_on:
-    - ontask
-    - postgres
-    - redis
+  command: celery --app=ontask worker --loglevel=info --hostname=ontask.default.%%h --max-tasks-per-child=100
 
 postgres:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
   environment:
     - POSTGRES_PASSWORD={{ ONTASK_POSTGRES_ROOT_PASSWORD }}
-    - PGDATA=/var/lib/postgresql/data/pgdata
   user: "999:999"
   volumes:
     - ../../data/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
-  expose:
-    - "5433"
-  ports:
-    - "5433:5433"
+  depends_on:
+    - permissions
