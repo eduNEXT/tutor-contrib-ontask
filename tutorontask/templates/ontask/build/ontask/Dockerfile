@@ -27,7 +27,7 @@ RUN apt-get update && apt-get upgrade -y \
 RUN apt update && \
     apt install -y libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git pkg-config libmysqlclient-dev
 
 # Install pyenv
 # https://www.python.org/downloads/
@@ -58,17 +58,7 @@ ENV VIRTUAL_ENV /app/venv/
 RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
 RUN pip install uwsgi==2.0.21
-
-###### Create necessary directories and files
-
-# Create logs directory
-RUN mkdir -p /app/ontask/logs
-RUN echo "Touching log files" \
-touch /app/ontask/logs/django.log \
-touch /app/ontask/logs/project.log \
-touch /app/ontask/logs/scheduler.log \
-touch /app/ontask/logs/script.log \
-touch /app/ontask/logs/celery.log
+RUN pip install mysqlclient==2.2.4
 
 # Copy the default uWSGI configuration
 COPY settings/uwsgi.ini .
