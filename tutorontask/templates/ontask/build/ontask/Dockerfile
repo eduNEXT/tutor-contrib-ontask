@@ -58,7 +58,6 @@ ENV VIRTUAL_ENV /app/venv/
 RUN pip install -r /app/ontask/requirements/base.txt
 RUN pip install -r /app/ontask/requirements/essential.txt
 RUN pip install uwsgi==2.0.21
-RUN pip install mysqlclient==2.2.4
 
 # Copy the default uWSGI configuration
 COPY settings/uwsgi.ini .
