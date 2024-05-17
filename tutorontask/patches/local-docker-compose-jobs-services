@@ -2,7 +2,7 @@
 ontask-job:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - "8080:8080"
+    - 8080:{{ ONTASK_PORT }}
   environment:
     - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
@@ -11,9 +11,7 @@ ontask-job:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
     - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
-  depends_on:
-    - postgres
-    - redis
+  depends_on: [postgres, redis]
 
 ontask-worker-job:
   restart: unless-stopped
@@ -25,13 +23,9 @@ ontask-worker-job:
     - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
     - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
     - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
-  depends_on:
-    - ontask
-    - postgres
-    - redis
+  depends_on: [postgres, redis]
 
 postgres-job:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
-  depends_on:
-    - postgres
+  depends_on: [postgres]
 {% endif %}

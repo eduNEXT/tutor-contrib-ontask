@@ -1,18 +1,19 @@
 ontask:
   image: {{ ONTASK_DOCKER_IMAGE }}
   ports:
-    - "8080:8080"
+    - 8080:{{ ONTASK_PORT }}
   environment:
     - ENV_FILENAME=/app/ontask/docker.env
     - C_FORCE_ROOT=true
   restart: unless-stopped
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
-  command: ./manage.py runserver 0.0.0.0:8080
+    - ../plugins/ontask/apps/service/settings/development.py:/app/ontask/settings/development.py:ro
+  command: ./manage.py runserver 0.0.0.0:{{ ONTASK_PORT }}
   depends_on:
     - postgres
     - redis
+    - ontask-worker
 
 ontask-worker:
   restart: unless-stopped
@@ -22,13 +23,8 @@ ontask-worker:
     - C_FORCE_ROOT=true
   volumes:
     - ../plugins/ontask/apps/docker/development/docker.env:/app/ontask/docker.env:ro
-    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
-    - ../plugins/ontask/apps/supervisor/supervisor.conf:/app/ontask/supervisor/supervisor.conf:ro
-  command: supervisord -n -c /app/ontask/supervisor/supervisor.conf
-  depends_on:
-    - ontask
-    - postgres
-    - redis
+    - ../plugins/ontask/apps/service/settings/development.py:/app/ontask/settings/development.py:ro
+  command: celery --app=ontask worker --loglevel=info --hostname=ontask.default.%%h --max-tasks-per-child=100
 
 postgres:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
@@ -38,3 +34,5 @@ postgres:
   volumes:
     - ../../data/postgres/data:/var/lib/postgresql/data
   restart: unless-stopped
+  depends_on:
+    - permissions
