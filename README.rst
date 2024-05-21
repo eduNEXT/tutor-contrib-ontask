@@ -38,9 +38,13 @@ Run the environment::
 
     tutor [dev|local] start -d
 
+Get the OnTask URL::
+
+    tutor config printvalue ONTASK_URL
+
 Visit On Task landing page::
 
-    <ONTASK_URL>/
+    http(s)://<ONTASK_URL>
 
 .. image:: https://github.com/eduNEXT/tutor-contrib-ontask/assets/64440265/8c2949b2-c7a5-4608-8e52-9226986460c1
 
