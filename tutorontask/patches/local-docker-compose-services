@@ -15,6 +15,7 @@ ontask:
     - postgres
     - redis
     - ontask-worker
+    - ontask-celery-beat
 
 ontask-worker:
   restart: unless-stopped
@@ -27,6 +28,18 @@ ontask-worker:
     - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
     - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
   command: celery --app=ontask worker --loglevel=info --hostname=ontask.default.%%h --max-tasks-per-child=100
+
+ontask-celery-beat:
+  restart: unless-stopped
+  image: {{ ONTASK_DOCKER_IMAGE }}
+  environment:
+    - ENV_FILENAME=/app/ontask/docker.env
+    - C_FORCE_ROOT=true
+  volumes:
+    - ../plugins/ontask/apps/docker/production/docker.env:/app/ontask/docker.env:ro
+    - ../plugins/ontask/apps/service/settings/base.py:/app/ontask/settings/base.py:ro
+    - ../plugins/ontask/apps/service/settings/production.py:/app/ontask/settings/production.py:ro
+  command: celery --app=ontask beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 postgres:
   image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}

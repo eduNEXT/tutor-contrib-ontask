@@ -97,6 +97,54 @@ spec:
         - name: production-settings
           configMap:
             name: ontask-settings
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ontask-celery-beat
+  labels:
+    app.kubernetes.io/name: ontask-celery-beat
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ontask-celery-beat
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ontask-celery-beat
+    spec:
+      containers:
+        - name: ontask-celery-beat
+          env:
+            - name: ENV_FILENAME
+              value: "/app/ontask/docker.env"
+            - name: C_FORCE_ROOT
+              value: "true"
+          image: {{ ONTASK_DOCKER_IMAGE }}
+          volumeMounts:
+            - name: docker-env
+              mountPath: /app/ontask/docker.env
+              subPath: docker.env
+            - name: base-settings
+              mountPath: /app/ontask/settings/base.py
+              subPath: base.py
+            - name: production-settings
+              mountPath: /app/ontask/settings/production.py
+              subPath: production.py
+          args:  ["celery", "--app=ontask", "beat", "--loglevel=info", "--scheduler=django_celery_beat.schedulers:DatabaseScheduler"]
+      restartPolicy: Always
+      volumes:
+        - name: docker-env
+          configMap:
+            name: ontask-env
+        - name: base-settings
+          configMap:
+            name: ontask-settings
+        - name: production-settings
+          configMap:
+            name: ontask-settings
 {% endif %}
 
 {% if RUN_POSTGRES %}
