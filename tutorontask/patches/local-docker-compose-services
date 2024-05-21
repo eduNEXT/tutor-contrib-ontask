@@ -53,4 +53,5 @@ postgres:
     - "5433"
   ports:
     - "5433:5433"
+  depends_on: [permissions]
 {% endif %}
