@@ -1,13 +1,9 @@
 OnTask plugin for `Tutor <https://docs.tutor.overhang.io>`__
 ============================================================
 
-`OnTask <https://www.ontasklearning.org/>`__  is a platform offering instructors and educational designers the capacity to use data to personalize the learner experience. 
+`OnTask <https://www.ontasklearning.org/>`__  is a platform offering instructors and educational designers the capacity to use data to personalize the learner experience. This Tutor plugin allows you to install OnTask in your Tutor ecosystem.
 
-This Tutor plugin allows you to install OnTask in your Tutor ecosystem.
-
-**NOTE**: The OnTask service can then be integrated into the Open edX platform with the  `OnTask Plugin`_.
-
-.. _OnTask Plugin: https://github.com/eduNEXT/platform-plugin-ontask
+**NOTE**: The OnTask service can then be integrated into the Open edX platform with the  `OnTask Plugin <https://github.com/eduNEXT/platform-plugin-ontask>`_.
 
 This plugin is an open-source contribution to the Open edX platform ecosystem, funded by the Unidigital project from the Spanish Government—2023.
 
@@ -60,8 +56,9 @@ Configuration
 
 The following configuration options are available for your ``config.yml``:
 
-- ``ONTASK_DOCKER_IMAGE`` (default: ``docker.io/edunext/ontask:<LATEST PLUGIN TAG>``): OnTask production docker image to use.
+- ``ONTASK_DOCKER_IMAGE`` (default: ``docker.io/edunext/ontask:{{ ONTASK_VERSION }}``): OnTask production docker image to use.
 - ``ONTASK_POSTGRES_DOCKER_IMAGE`` (default: ``postgres:14.12-bullseye``): Persistent layer docker image used by the current On Task APP version.
+- ``ONTASK_APP_VERSION`` (default: ``Version_11_1``): On Task Django service version to be used when building a new On Task docker image,
 - ``ONTASK_HOST`` (default: ``ontask.<LMS_HOST>``): Hostname for OnTask.
 - ``ONTASK_PORT`` (default: ``80``): Port for OnTask.
 - ``ONTASK_POSTGRES_HOST`` (default: ``postgres``): Hostname for the postgres service. 
@@ -75,8 +72,11 @@ The following configuration options are available for your ``config.yml``:
 - ``ONTASK_SUPERUSER_NAME`` (default: ``Admin``): Admin name for OnTask.
 - ``ONTASK_SUPERUSER_EMAIL`` (default: ``admin@mail.com``): Admin email for OnTask.
 - ``ONTASK_SUPERUSER_PASSWORD``: Admin password for OnTask.
+- ``ONTASK_EXTRA_PRODUCTION_SETTINGS``: Extra Django configurations for production environments.
+- ``ONTASK_EXTRA_DEV_SETTINGS``: Extra Django configurations for dev environments.
 - ``ONTASK_EMAIL_ACTION_NOTIFICATION_SENDER`` (default: ``admin@mail.com``): Email used for notifications.
 - ``RUN_ONTASK`` (default: ``true``): Whether to run On Task or not.
+- ``RUN_POSTGRES`` (default: ``true``): Whether to run postgres or not.
 
 The Django OnTask service hosting recommendations heavily inspired the templates used for this service but adapted for seamless integration
 with Open edX. Here's the main difference:
