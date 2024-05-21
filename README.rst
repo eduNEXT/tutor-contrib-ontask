@@ -5,7 +5,7 @@ OnTask plugin for `Tutor <https://docs.tutor.overhang.io>`__
 
 **NOTE**: The OnTask service can then be integrated into the Open edX platform with the  `OnTask Plugin <https://github.com/eduNEXT/platform-plugin-ontask>`_.
 
-This plugin is an open-source contribution to the Open edX platform ecosystem, funded by the Unidigital project from the Spanish Government—2023.
+This plugin is an open-source contribution to the Open edX platform ecosystem, funded by the Unidigital project from the Spanish Government - 2023.
 
 
 Installation
@@ -61,8 +61,8 @@ The following configuration options are available for your ``config.yml``:
 - ``ONTASK_APP_VERSION`` (default: ``Version_11_1``): On Task Django service version to be used when building a new On Task docker image,
 - ``ONTASK_HOST`` (default: ``ontask.<LMS_HOST>``): Hostname for OnTask.
 - ``ONTASK_PORT`` (default: ``80``): Port for OnTask.
-- ``ONTASK_POSTGRES_HOST`` (default: ``postgres``): Hostname for the postgres service. 
-- ``ONTASK_DATABASE_URL`` (default: ``"postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_POSTGRES_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }})"``: Connection string for postgres.
+- ``ONTASK_POSTGRES_HOST`` (default: ``postgres``): Hostname for the postgres service.
+- ``ONTASK_DATABASE_URL`` (default: ``"postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_DB_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }})"``: Connection string for postgres.
 - ``ONTASK_REDIS_URL`` (default: "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"): Connection string for redis.
 - ``ONTASK_DB_NAME`` (default: ``ontask``): Database name for OnTask.
 - ``ONTASK_DB_USER`` (default: ``ontask``): Database user for OnTask.
