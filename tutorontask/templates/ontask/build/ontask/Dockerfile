@@ -45,7 +45,7 @@ RUN $PYENV_ROOT/versions/$PYTHON_VERSION/bin/python -m venv /app/venv
 ###### Checkout OnTask code
 
 RUN mkdir -p /app/ontask && \
-    git clone https://github.com/abelardopardo/ontask_b.git --branch {{ ONTASK_APP_VERSION }} --depth 1 /app/ontask
+    git clone {{ ONTASK_APP_REPO }} --branch {{ ONTASK_APP_VERSION }} --depth 1 /app/ontask
 WORKDIR /app/ontask
 
 ###### Turn on virtualenv and install requirements
