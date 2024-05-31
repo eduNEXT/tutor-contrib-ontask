@@ -29,6 +29,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("ONTASK_POSTGRES_DOCKER_IMAGE", "postgres:14.12-bullseye"),
         ("ONTASK_DATABASE_URL", "postgres://{{ ONTASK_DB_USER }}:{{ ONTASK_DB_PASSWORD }}@postgres:5432/{{ ONTASK_DB_NAME }}"),
         ("ONTASK_REDIS_URL", "redis://{{ REDIS_HOST }}:{{ REDIS_PORT }}"),
+        ("ONTASK_APP_REPO", "https://github.com/abelardopardo/ontask_b.git"),
         ("ONTASK_APP_VERSION", "Version_11_1"),
         ("ONTASK_EXTRA_PRODUCTION_SETTINGS", ""),
         ("ONTASK_EXTRA_DEV_SETTINGS", ""),
