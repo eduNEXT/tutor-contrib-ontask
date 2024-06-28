@@ -1,6 +1,6 @@
 {% if ENABLE_HTTPS %}
 ONTASK_URL = "https://{{ONTASK_HOST}}"
-ONTASK_INTERNAL_API = "https://ontask:{{ ONTASK_PORT }}"
+ONTASK_INTERNAL_API = "http://ontask:{{ ONTASK_PORT }}"
 {% else %}
 ONTASK_URL = "http://{{ONTASK_HOST}}:{{ONTASK_PORT}}"
 ONTASK_INTERNAL_API = "http://ontask:{{ ONTASK_PORT }}"
