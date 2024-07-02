@@ -33,7 +33,7 @@ RUN apt update && \
 # https://www.python.org/downloads/
 # https://github.com/pyenv/pyenv/releases
 ARG PYTHON_VERSION=3.9.17
-ENV PYENV_ROOT /opt/pyenv
+ENV PYENV_ROOT=/opt/pyenv
 RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.3.21 --depth 1
 
 # Install Python
@@ -51,8 +51,8 @@ WORKDIR /app/ontask
 ###### Turn on virtualenv and install requirements
 
 # Turn on virtualenv
-ENV PATH /app/venv/bin:${PATH}
-ENV VIRTUAL_ENV /app/venv/
+ENV PATH=/app/venv/bin:${PATH}
+ENV VIRTUAL_ENV=/app/venv/
 
 # Install Requirements
 RUN pip install -r /app/ontask/requirements/base.txt
