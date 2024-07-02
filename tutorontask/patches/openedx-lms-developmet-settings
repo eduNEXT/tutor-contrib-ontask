@@ -1,0 +1,2 @@
+ONTASK_URL = "http://{{ ONTASK_HOST }}:{{ ONTASK_PORT }}"
+ONTASK_INTERNAL_API = "http://ontask:{{ ONTASK_PORT }}"
