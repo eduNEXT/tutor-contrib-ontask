@@ -171,9 +171,16 @@ spec:
           env:
             - name: POSTGRES_PASSWORD
               value: {{ ONTASK_POSTGRES_ROOT_PASSWORD }}
+            # Fixes:
+            # initdb: error: directory "/var/lib/postgresql/data" exists but is not empty
+            # It contains a lost+found directory, perhaps due to it being a mount point.
+            # Using a mount point directly as the data directory is not recommended.
+            # Create a subdirectory under the mount point.
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           image: {{ ONTASK_POSTGRES_DOCKER_IMAGE }}
           volumeMounts:
-            - mountPath: /var/lib/postgresql
+            - mountPath: /var/lib/postgresql/data
               name: data
       restartPolicy: Always
       volumes:
