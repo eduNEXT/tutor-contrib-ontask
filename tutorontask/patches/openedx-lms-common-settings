@@ -1,5 +1,0 @@
-{% if ENABLE_HTTPS %}
-ONTASK_URL = "https://{{ONTASK_HOST}}"
-{% else %}
-ONTASK_URL = "http://{{ONTASK_HOST}}:{{ONTASK_PORT}}"
-{% endif %}

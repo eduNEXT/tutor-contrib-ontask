@@ -1,0 +1,8 @@
+ONTASK_SCHEMA = "{{ "https" if ENABLE_HTTPS else "http" }}"
+ONTASK_URL = f"{ ONTASK_SCHEMA }://{{ ONTASK_HOST }}"
+
+{% if RUN_ONTASK %}
+ONTASK_INTERNAL_API = "http://ontask:{{ ONTASK_PORT }}"
+{% else %}
+ONTASK_INTERNAL_API = f"{ ONTASK_URL }"
+{% endif %}
