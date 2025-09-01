@@ -5,7 +5,8 @@ import os.path
 from glob import glob
 
 import click
-import pkg_resources
+import importlib.resources
+
 from tutor import hooks
 
 from .__about__ import __version__
@@ -88,9 +89,7 @@ MY_INIT_TASKS: list[tuple[str, tuple[str, ...]]] = [
 # and add it to the CLI_DO_INIT_TASKS filter, which tells Tutor to
 # run it as part of the `init` job.
 for service, template_path in MY_INIT_TASKS:
-    full_path: str = pkg_resources.resource_filename(
-        "tutorontask", os.path.join("templates", *template_path)
-    )
+    full_path: str = importlib.resources.files("tutorontask") / os.path.join("templates", *template_path)
     with open(full_path, encoding="utf-8") as init_task_file:
         init_task: str = init_task_file.read()
     hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, init_task))
@@ -170,7 +169,7 @@ hooks.Filters.IMAGES_PUSH.add_items(
 hooks.Filters.ENV_TEMPLATE_ROOTS.add_items(
     # Root paths for template files, relative to the project root.
     [
-        pkg_resources.resource_filename("tutorontask", "templates"),
+        importlib.resources.files("tutorontask") / "templates",
     ]
 )
 
@@ -197,7 +196,7 @@ hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
 # apply a patch based on the file's name and contents.
 for path in glob(
     os.path.join(
-        pkg_resources.resource_filename("tutorontask", "patches"),
+        importlib.resources.files("tutorontask") / "patches",
         "*",
     )
 ):
